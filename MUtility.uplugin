@@ -1,0 +1,24 @@
+﻿{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "MUtility",
+	"Description": "Various Utility Functions",
+	"Category": "Other",
+	"CreatedBy": "Miknios",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"EnabledByDefault": true,
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "MUtility",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
