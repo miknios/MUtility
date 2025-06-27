@@ -81,4 +81,10 @@ class MUTILITY_API UMMathBlueprintFunctionLibrary : public UBlueprintFunctionLib
 	{
 		return MMath::RotateDirectionTowardsTargetDirectionByAngle(Direction, DirectionTarget, AngleDeg);
 	}
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static FVector TranslateInputToControlRotationSpaceDirectionXY(const FVector2D& InputDirection, const FRotator& ControlRotation)
+	{
+		return MMath::TranslateInputToControlRotationSpaceDirectionXY(InputDirection, ControlRotation);
+	}
 };

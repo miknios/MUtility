@@ -98,4 +98,20 @@ struct MMath
 		const FVector DirectionRotated = QuatRotation.RotateVector(DirectionNormalized);
 		return DirectionRotated;
 	}
+
+	static FORCEINLINE_DEBUGGABLE FVector TranslateInputToControlRotationSpaceDirectionXY(
+		const FVector2D& InputDirection, const FRotator& ControlRotation)
+	{
+		const float YawRad = FMath::DegreesToRadians(ControlRotation.Yaw);
+		const float CosYaw = FMath::Cos(YawRad);
+		const float SinYaw = FMath::Sin(YawRad);
+
+		const FVector Direction(
+			InputDirection.X * CosYaw - InputDirection.Y * SinYaw,
+			InputDirection.X * SinYaw + InputDirection.Y * CosYaw,
+			0
+		);
+
+		return Direction;
+	}
 };
