@@ -14,3 +14,12 @@ enum class ELeftRightSide : uint8
 	Left,
 	Right
 };
+
+UENUM(BlueprintType)
+enum class EMCollisionShape : uint8
+{
+	Box,
+	Sphere,
+	Capsule,
+	Line UMETA(DisplayName = "Line (can't be used for overlap)")
+};

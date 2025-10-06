@@ -7,9 +7,6 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "MMathBlueprintFunctionLibrary.generated.h"
 
-/**
- * 
- */
 UCLASS(meta = (DisplayName = "MMath"))
 class MUTILITY_API UMMathBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 {

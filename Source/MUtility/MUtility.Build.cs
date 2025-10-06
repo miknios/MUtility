@@ -23,7 +23,16 @@ public class MUtility : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"PhysicsCore"
 			}
 		);
+
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.AddRange(new[]
+			{
+				"MessageLog" 
+			});
+		}
 	}
 }

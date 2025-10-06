@@ -6,9 +6,6 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "MString.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class MUTILITY_API UMString : public UBlueprintFunctionLibrary
 {
@@ -16,7 +13,7 @@ class MUTILITY_API UMString : public UBlueprintFunctionLibrary
 
 public:
 	static FString ToString(const bool Value);
-	
+
 	template <typename EnumType>
 	FORCEINLINE static FString EnumToString(const EnumType EnumeratorValue)
 	{

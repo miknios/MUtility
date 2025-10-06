@@ -7,9 +7,6 @@
 #include "MManualTimer.generated.h"
 
 
-/**
- * 
- */
 USTRUCT(BlueprintType)
 struct MUTILITY_API FMManualTimer
 {
@@ -57,16 +54,20 @@ class USRManualTimerLibrary : public UBlueprintFunctionLibrary
 
 public:
 	UFUNCTION(BlueprintCallable)
-	static void TickManualTimer(UPARAM(ref) FMManualTimer& Timer, float DeltaTime);
+	static void TickManualTimer(UPARAM(ref)
+	                            FMManualTimer& Timer, float DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
-	static void ResetManualTimer(UPARAM(ref) FMManualTimer& Timer);
+	static void ResetManualTimer(UPARAM(ref)
+		FMManualTimer& Timer);
 
 	UFUNCTION(BlueprintCallable)
-	static void CompleteManualTimer(UPARAM(ref) FMManualTimer& Timer);
+	static void CompleteManualTimer(UPARAM(ref)
+		FMManualTimer& Timer);
 
 	UFUNCTION(BlueprintCallable)
-	static void SetManualTimerDuration(UPARAM(ref) FMManualTimer& Timer, float DurationNew);
+	static void SetManualTimerDuration(UPARAM(ref)
+	                                   FMManualTimer& Timer, float DurationNew);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static float GetManualTimerProgressNormalized(FMManualTimer Timer);
