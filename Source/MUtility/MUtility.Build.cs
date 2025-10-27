@@ -11,7 +11,8 @@ public class MUtility : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", 
+				"AIModule",
 			}
 		);
 
@@ -23,7 +24,8 @@ public class MUtility : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"PhysicsCore"
+				"PhysicsCore",
+				"DeveloperSettings"
 			}
 		);
 
