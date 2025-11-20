@@ -19,5 +19,5 @@ namespace M::Debug
 	 * Additionally in the editor - adds a message to Message Log, displays notification with a button to quickly open Message Log
 	 */
 	MUTILITY_API void LogUserError(const FLogCategoryBase& LogCategory, const FString& ErrorStr, const UObject* ContextObject = nullptr,
-	                               EContextObjectLinkType ContextObjectLinkType = EContextObjectLinkType::Direct);
+	                               EContextObjectLinkType ContextObjectLinkType = EContextObjectLinkType::Source);
 }
