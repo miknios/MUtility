@@ -114,4 +114,9 @@ struct MMath
 
 		return Direction;
 	}
+	
+	static FORCEINLINE_DEBUGGABLE double TimeSince(const double TimeCurrent, const double TimeToCheck)
+	{
+		return TimeCurrent - TimeToCheck;
+	}
 };
