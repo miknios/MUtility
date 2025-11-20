@@ -47,7 +47,7 @@ namespace M::Physics
 }
 
 UCLASS()
-class UMPhysicsBlueprintLibrary : public UBlueprintFunctionLibrary
+class MUTILITY_API UMPhysicsBlueprintLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
@@ -57,4 +57,8 @@ public:
 	                               const FQuat CollisionShapeRotation = FQuat(), const FLinearColor Color = FLinearColor::Red,
 	                               const bool bPersistentLines = false, const float LifeTime = -1, const uint8 DepthPriority = 0,
 	                               const float Thickness = 0);
+
+	UFUNCTION(BlueprintCallable, Category = "M|Physics", meta = (WorldContext = "WorldContextObject", CallableWithoutWorldContext))
+	static bool LineTraceActor(const UObject* WorldContextObject, const FVector& Start, const FVector& End, ETraceTypeQuery TraceChannel,
+	                           const AActor* ActorToTrace, FHitResult& OutHit);
 };

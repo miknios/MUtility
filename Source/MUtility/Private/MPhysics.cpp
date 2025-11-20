@@ -157,3 +157,24 @@ void UMPhysicsBlueprintLibrary::DrawTraceHitResult(const UObject* WorldContextOb
 	M::Physics::DrawTraceHitResult(World, HitResult, M::Physics::MakeCollisionShapeFromShapeRef(ShapeRef), CollisionShapeRotation,
 	                               Color.ToFColor(true), bPersistentLines, LifeTime, DepthPriority, Thickness);
 }
+
+bool UMPhysicsBlueprintLibrary::LineTraceActor(const UObject* WorldContextObject, const FVector& Start, const FVector& End,
+                                               const ETraceTypeQuery TraceChannel, const AActor* ActorToTrace, FHitResult& OutHit)
+{
+	if (!IsValid(ActorToTrace))
+	{
+		return false;
+	}
+	
+	const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::ReturnNull);
+	if (!IsValid(World))
+	{
+		return false;
+	}
+
+	const ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
+	const FCollisionQueryParams QueryParams;
+	const bool bHit = ActorToTrace->ActorLineTraceSingle(OutHit, Start, End, CollisionChannel, QueryParams);
+
+	return bHit;
+}
