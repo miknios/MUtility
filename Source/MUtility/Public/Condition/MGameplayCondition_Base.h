@@ -18,13 +18,13 @@ class MUTILITY_API UMGameplayCondition_Base : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable)
-	bool Evaluate(UWorld* World);
+	bool Evaluate(const UWorld* World);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void ListenForChanges(UWorld* World);
+	void ListenForChanges(const UWorld* World);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void StopListeningForChanges(UWorld* World);
+	void StopListeningForChanges(const UWorld* World);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	FString GetConditionDescriptionString() const;
@@ -34,7 +34,7 @@ public:
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
-	bool Evaluate_Impl(UWorld* World);
+	bool Evaluate_Impl(const UWorld* World);
 	
 	UFUNCTION(BlueprintCallable)
 	void BroadcastOnConditionSourceChanged();

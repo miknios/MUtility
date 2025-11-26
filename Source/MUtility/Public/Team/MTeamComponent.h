@@ -24,6 +24,6 @@ public:
 	FName GetAssignedTeam() const;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Team", meta = (GetOptions = "MUtility.MTeamLibrary.GetTeamNames"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Team", meta = (GetOptions = "MUtility.MTeamLibrary.GetTeamNamesAll"))
 	FName AssignedTeamName;
 };

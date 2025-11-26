@@ -12,10 +12,10 @@ struct MUTILITY_API FMTeamAttitudeOverride
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (GetOptions = "MUtility.MTeamLibrary.GetTeamNames"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (GetOptions = "MUtility.MTeamLibrary.GetTeamNamesAll"))
 	FName TeamA;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (GetOptions = "MUtility.MTeamLibrary.GetTeamNames"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (GetOptions = "MUtility.MTeamLibrary.GetTeamNamesAll"))
 	FName TeamB;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

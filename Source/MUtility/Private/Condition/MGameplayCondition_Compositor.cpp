@@ -3,7 +3,7 @@
 
 #include "Condition/MGameplayCondition_Compositor.h"
 
-bool UMGameplayCondition_Compositor::Evaluate_Impl_Implementation(UWorld* World)
+bool UMGameplayCondition_Compositor::Evaluate_Impl_Implementation(const UWorld* World)
 {
 	bool bOrResult = false;
 	for (UMGameplayCondition_Base* Condition : Conditions)
@@ -28,7 +28,7 @@ bool UMGameplayCondition_Compositor::Evaluate_Impl_Implementation(UWorld* World)
 	return bResult;
 }
 
-void UMGameplayCondition_Compositor::ListenForChanges_Implementation(UWorld* World)
+void UMGameplayCondition_Compositor::ListenForChanges_Implementation(const UWorld* World)
 {
 	for (UMGameplayCondition_Base* Condition : Conditions)
 	{
@@ -42,7 +42,7 @@ void UMGameplayCondition_Compositor::ListenForChanges_Implementation(UWorld* Wor
 	}
 }
 
-void UMGameplayCondition_Compositor::StopListeningForChanges_Implementation(UWorld* World)
+void UMGameplayCondition_Compositor::StopListeningForChanges_Implementation(const UWorld* World)
 {
 	for (UMGameplayCondition_Base* Condition : Conditions)
 	{

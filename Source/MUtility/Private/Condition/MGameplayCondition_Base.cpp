@@ -3,16 +3,16 @@
 
 #include "Condition/MGameplayCondition_Base.h"
 
-bool UMGameplayCondition_Base::Evaluate_Impl_Implementation(UWorld* World)
+bool UMGameplayCondition_Base::Evaluate_Impl_Implementation(const UWorld* World)
 {
 	return false;
 }
 
-void UMGameplayCondition_Base::ListenForChanges_Implementation(UWorld* World)
+void UMGameplayCondition_Base::ListenForChanges_Implementation(const UWorld* World)
 {
 }
 
-void UMGameplayCondition_Base::StopListeningForChanges_Implementation(UWorld* World)
+void UMGameplayCondition_Base::StopListeningForChanges_Implementation(const UWorld* World)
 {
 }
 
@@ -21,7 +21,7 @@ FString UMGameplayCondition_Base::GetConditionDescriptionString_Implementation()
 	return TEXT("");
 }
 
-bool UMGameplayCondition_Base::Evaluate(UWorld* World)
+bool UMGameplayCondition_Base::Evaluate(const UWorld* World)
 {
 	bool bResult = Evaluate_Impl(World);
 	if (bInvertCondition)
