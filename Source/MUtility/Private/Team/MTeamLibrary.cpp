@@ -23,7 +23,7 @@ FGenericTeamId UMTeamLibrary::GetTeamIdForTeamName(const FName TeamName)
 	UMTeamSettings* TeamSettings = UMTeamSettings::Get();
 	if (TeamSettings == nullptr)
 	{
-		return UINT8_ERROR;
+		return FGenericTeamId::NoTeam;
 	}
 
 	for (int i = 0; i < TeamSettings->Teams.Num(); ++i)
@@ -34,7 +34,7 @@ FGenericTeamId UMTeamLibrary::GetTeamIdForTeamName(const FName TeamName)
 		}
 	}
 
-	return UINT8_ERROR;
+	return FGenericTeamId::NoTeam;
 }
 
 TOptional<FMTeamDefinition> UMTeamLibrary::GetTeamDefinitionForTeamId(const FGenericTeamId TeamId)
