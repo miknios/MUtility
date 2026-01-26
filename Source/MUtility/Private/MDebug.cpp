@@ -7,6 +7,7 @@
 #include "MessageLogModule.h"
 #include "Framework/Notifications/NotificationManager.h"
 #include "Widgets/Notifications/SNotificationList.h"
+#include "Editor.h"
 #endif
 
 namespace M::Debug::Private
@@ -14,7 +15,6 @@ namespace M::Debug::Private
 #if WITH_EDITOR
 	inline TSharedPtr<SNotificationItem> ErrorNotificationActive;
 	inline TArray<FString> ErrorNotificationsToDisplayArray;
-#endif
 
 	FString ConstructNotificationErrorString()
 	{
@@ -32,10 +32,55 @@ namespace M::Debug::Private
 		FString Result = StringBuilder.ToString();
 		return Result;
 	}
+#endif
 }
 
+#if WITH_EDITOR
+UObject* M::Debug::TryGetEditorCounterpartObject(const UObject& Object)
+{
+	if (const AActor* ActorObject = Cast<AActor>(&Object))
+	{
+		return EditorUtilities::GetEditorWorldCounterpartActor(const_cast<AActor*>(ActorObject));
+	}
+
+	if (const UActorComponent* ComponentObject = Cast<UActorComponent>(&Object))
+	{
+		AActor* const ComponentOwnerActor = ComponentObject->GetOwner();
+		if (IsValid(ComponentOwnerActor))
+		{
+			const AActor* const EditorCounterpartOwnerActor = EditorUtilities::GetEditorWorldCounterpartActor(
+				ComponentOwnerActor);
+			if (IsValid(EditorCounterpartOwnerActor))
+			{
+				TArray<UActorComponent*> ComponentArray;
+				EditorCounterpartOwnerActor->GetComponents(ComponentObject->GetClass(), ComponentArray);
+				UActorComponent** EditorCounterpartComponent = Algo::FindByPredicate(
+					ComponentArray,
+					[ComponentObject](const UActorComponent* const Other)
+					{
+						return ComponentObject->GetFName() == Other->GetFName();
+					});
+
+				if (EditorCounterpartComponent != nullptr)
+				{
+					return *EditorCounterpartComponent;
+				}
+			}
+		}
+	}
+
+	UObject* BlueprintClassSource = Object.GetClass()->ClassGeneratedBy;
+	if (IsValid(BlueprintClassSource))
+	{
+		return BlueprintClassSource;
+	}
+
+	return const_cast<UObject*>(&Object);
+}
+#endif
+
 void M::Debug::LogUserError(const FLogCategoryBase& LogCategory, const FString& ErrorStr, const UObject* ContextObject,
-                            EContextObjectLinkType ContextObjectLinkType)
+                            EMDebug_ContextObjectLinkType ContextObjectLinkType)
 {
 #if WITH_EDITOR
 	const FName LogCategoryName = LogCategory.GetCategoryName();
@@ -50,9 +95,10 @@ void M::Debug::LogUserError(const FLogCategoryBase& LogCategory, const FString& 
 
 	if (IsValid(ContextObject))
 	{
-		const UObject* ObjectToLink = ContextObjectLinkType == EContextObjectLinkType::Direct
+		const UObject* ObjectToLink = ContextObjectLinkType == EMDebug_ContextObjectLinkType::Direct
 			                              ? ContextObject
-			                              : ContextObject->GetClass()->ClassGeneratedBy;
+			                              : TryGetEditorCounterpartObject(*ContextObject);
+
 		TokenizedMessage->AddToken(FUObjectToken::Create(ObjectToLink));
 	}
 
@@ -135,4 +181,10 @@ void M::Debug::LogUserError(const FLogCategoryBase& LogCategory, const FString& 
 	           TEXT("%s"), *ErrorStr);
 
 	CLEAR_WARN_COLOR();
+}
+
+void UMDebugLibrary::LogUserError(const FString& ErrorStr, UObject* ContextObject,
+                                  const EMDebug_ContextObjectLinkType ContextObjectLinkType)
+{
+	M::Debug::LogUserError(LogTemp, ErrorStr, ContextObject, ContextObjectLinkType);
 }

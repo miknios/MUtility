@@ -33,6 +33,7 @@ public class MUtility : ModuleRules
 		{
 			PrivateDependencyModuleNames.AddRange(new[]
 			{
+				"UnrealEd",
 				"MessageLog" 
 			});
 		}
