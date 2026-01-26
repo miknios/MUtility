@@ -15,7 +15,7 @@ class MUTILITY_API UMFloatSource_Base : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	float GetFloatValue() const;
+	float GetFloatValue(UObject* ContextObject = nullptr) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ListenForChanges();
@@ -38,7 +38,7 @@ class UMFloatSource_Static : public UMFloatSource_Base
 
 public:
 	// UMFloatSource_Base
-	virtual float GetFloatValue_Implementation() const override;
+	virtual float GetFloatValue_Implementation(UObject* ContextObject) const override;
 	// ~ UMFloatSource_Base
 
 protected:
