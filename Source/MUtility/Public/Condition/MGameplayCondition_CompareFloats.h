@@ -38,12 +38,12 @@ protected:
 	UFUNCTION()
 	void OnFloatValueChanged();
 	
-	UPROPERTY(Instanced, EditAnywhere)
+	UPROPERTY(Instanced, EditAnywhere, Category = "Condition")
 	TObjectPtr<UMFloatSource_Base> ValueSourceLeft;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Condition")
 	EMCompareOp CompareOp;
 
-	UPROPERTY(Instanced, EditAnywhere)
+	UPROPERTY(Instanced, EditAnywhere, Category = "Condition")
 	TObjectPtr<UMFloatSource_Base> ValueSourceRight;
 };

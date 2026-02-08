@@ -39,6 +39,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void BroadcastOnConditionSourceChanged();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Condition")
 	bool bInvertCondition = false;
 };

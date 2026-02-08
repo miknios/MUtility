@@ -33,9 +33,9 @@ protected:
 	UFUNCTION()
 	void OnInternalConditionChanged();
 
-	UPROPERTY(Instanced, EditAnywhere)
+	UPROPERTY(Instanced, EditAnywhere, Category = "Condition")
 	TArray<TObjectPtr<UMGameplayCondition_Base>> Conditions;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Condition")
 	EMConditionCompositionType CompositionType;
 };
