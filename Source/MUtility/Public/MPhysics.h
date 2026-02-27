@@ -41,9 +41,23 @@ namespace M::Physics
 	                                     const FColor& Color, const bool bPersistentLines = false, const float LifeTime = -1,
 	                                     const uint8 DepthPriority = 0, const float Thickness = 0);
 
+	MUTILITY_API void DrawCollisionShape(const UWorld* World, const FMCollisionShapeRef& ShapeRef, const FTransform& Transform,
+	                                     const FColor& Color, const bool bPersistentLines = false, const float LifeTime = -1,
+	                                     const uint8 DepthPriority = 0, const float Thickness = 0);
+
 	MUTILITY_API void DrawTraceHitResult(const UWorld* World, const FHitResult& HitResult, const FCollisionShape& CollisionShape,
 	                                     const FQuat& CollisionShapeRotation, const FColor& Color, const bool bPersistentLines = false,
 	                                     const float LifeTime = -1, const uint8 DepthPriority = 0, const float Thickness = 0);
+	
+	MUTILITY_API void DrawCollisionShapePDI(FPrimitiveDrawInterface* PDI, const FMCollisionShapeRef& CollisionShape,
+												  const FTransform& Transform,
+												  const FColor& Color, float Thickness = 0);
+	
+	MUTILITY_API void DrawCollisionShapePDI(FPrimitiveDrawInterface* PDI, const FCollisionShape& CollisionShape,
+												  const FTransform& Transform,
+												  const FColor& Color, float Thickness = 0);
+	
+	MUTILITY_API FBoxSphereBounds GetSphereBoundsFromCollisionShape(const FCollisionShape& CollisionShape, const FTransform& Transform);
 }
 
 UCLASS()

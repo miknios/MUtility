@@ -13,6 +13,7 @@ public class MUtility : ModuleRules
 			{
 				"Core", 
 				"AIModule",
+				"MTeam",
 			}
 		);
 

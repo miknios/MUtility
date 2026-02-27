@@ -6,144 +6,225 @@
 #include "CollisionShape.h"
 #include "DrawDebugHelpers.h"
 
-FCollisionShape M::Physics::MakeCollisionShapeFromShapeRef(const FMCollisionShapeRef& ShapeRef)
+namespace M::Physics
 {
-	switch (ShapeRef.ShapeType)
+	FCollisionShape MakeCollisionShapeFromShapeRef(const FMCollisionShapeRef& ShapeRef)
 	{
-	case EMCollisionShape::Box:
+		switch (ShapeRef.ShapeType)
 		{
-			const FCollisionShape CollisionShape = FCollisionShape::MakeBox(ShapeRef.BoxExtent / 2.f);
-			return CollisionShape;
+		case EMCollisionShape::Box:
+			{
+				const FCollisionShape CollisionShape = FCollisionShape::MakeBox(ShapeRef.BoxExtent / 2.f);
+				return CollisionShape;
+			}
+		case EMCollisionShape::Sphere:
+			{
+				const FCollisionShape CollisionShape = FCollisionShape::MakeSphere(ShapeRef.SphereRadius);
+				return CollisionShape;
+			}
+		case EMCollisionShape::Capsule:
+			{
+				const FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(ShapeRef.CapsuleRadius, ShapeRef.CapsuleHalfHeight);
+				return CollisionShape;
+			}
+		case EMCollisionShape::Line:
+			{
+				return FCollisionShape();
+			}
 		}
-	case EMCollisionShape::Sphere:
+
+		UE_LOG(LogTemp, Error, TEXT("Unknown Collision Shape Type"));
+		return FCollisionShape();
+	}
+
+	FMCollisionShapeRef MakeCollisionShapeRefFromCollisionShape(const FCollisionShape& Shape)
+	{
+		FMCollisionShapeRef ShapeRef;
+
+		switch (Shape.ShapeType)
 		{
-			const FCollisionShape CollisionShape = FCollisionShape::MakeSphere(ShapeRef.SphereRadius);
-			return CollisionShape;
+		case ECollisionShape::Box:
+			{
+				ShapeRef.ShapeType = EMCollisionShape::Box;
+				ShapeRef.BoxExtent = Shape.GetBox() * 2.f;
+			}
+		case ECollisionShape::Sphere:
+			{
+				ShapeRef.ShapeType = EMCollisionShape::Sphere;
+				ShapeRef.SphereRadius = Shape.GetSphereRadius();
+			}
+		case ECollisionShape::Capsule:
+			{
+				ShapeRef.ShapeType = EMCollisionShape::Capsule;
+				ShapeRef.CapsuleRadius = Shape.GetCapsuleRadius();
+				ShapeRef.CapsuleHalfHeight = Shape.GetCapsuleHalfHeight();
+			}
+		case ECollisionShape::Line:
+			{
+				ShapeRef.ShapeType = EMCollisionShape::Line;
+			}
 		}
-	case EMCollisionShape::Capsule:
+
+		return ShapeRef;
+	}
+
+	void DrawCollisionShape(const UWorld* World, const FCollisionShape& CollisionShape, const FTransform& Transform,
+	                        const FColor& Color, const bool bPersistentLines, const float LifeTime, const uint8 DepthPriority,
+	                        const float Thickness)
+	{
+		constexpr int32 SphereSegments = 8;
+
+		if (!IsValid(World))
 		{
-			const FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(ShapeRef.CapsuleRadius, ShapeRef.CapsuleHalfHeight);
-			return CollisionShape;
+			return;
 		}
-	case EMCollisionShape::Line:
+
+		switch (CollisionShape.ShapeType)
 		{
-			return FCollisionShape();
+		case ECollisionShape::Box:
+			DrawDebugBox(World, Transform.GetLocation(), CollisionShape.GetBox() * 2.f, Transform.GetRotation(), Color, bPersistentLines,
+			             LifeTime,
+			             DepthPriority, Thickness);
+			break;
+		case ECollisionShape::Sphere:
+			DrawDebugSphere(World, Transform.GetLocation(), CollisionShape.GetSphereRadius(), SphereSegments, Color, bPersistentLines,
+			                LifeTime,
+			                DepthPriority, Thickness);
+			break;
+		case ECollisionShape::Capsule:
+			DrawDebugCapsule(World, Transform.GetLocation(), CollisionShape.GetCapsuleHalfHeight(), CollisionShape.GetCapsuleRadius(),
+			                 Transform.GetRotation(), Color,
+			                 bPersistentLines, LifeTime, DepthPriority, Thickness);
+			break;
+		case ECollisionShape::Line:
+			DrawDebugPoint(World, Transform.GetLocation(), 10.0f, Color, bPersistentLines, LifeTime, DepthPriority);
+			break;
+		default:
+			UE_LOG(LogTemp, Error, TEXT("Shape Type not handled by M::Physics::DrawCollisionShape"));
 		}
 	}
 
-	UE_LOG(LogTemp, Error, TEXT("Unknown Collision Shape Type"));
-	return FCollisionShape();
-}
-
-FMCollisionShapeRef M::Physics::MakeCollisionShapeRefFromCollisionShape(const FCollisionShape& Shape)
-{
-	FMCollisionShapeRef ShapeRef;
-
-	switch (Shape.ShapeType)
+	void DrawCollisionShape(const UWorld* World, const FMCollisionShapeRef& ShapeRef, const FTransform& Transform,
+	                        const FColor& Color, const bool bPersistentLines, const float LifeTime, const uint8 DepthPriority,
+	                        const float Thickness)
 	{
-	case ECollisionShape::Box:
-		{
-			ShapeRef.ShapeType = EMCollisionShape::Box;
-			ShapeRef.BoxExtent = Shape.GetBox() * 2.f;
-		}
-	case ECollisionShape::Sphere:
-		{
-			ShapeRef.ShapeType = EMCollisionShape::Sphere;
-			ShapeRef.SphereRadius = Shape.GetSphereRadius();
-		}
-	case ECollisionShape::Capsule:
-		{
-			ShapeRef.ShapeType = EMCollisionShape::Capsule;
-			ShapeRef.CapsuleRadius = Shape.GetCapsuleRadius();
-			ShapeRef.CapsuleHalfHeight = Shape.GetCapsuleHalfHeight();
-		}
-	case ECollisionShape::Line:
-		{
-			ShapeRef.ShapeType = EMCollisionShape::Line;
-		}
+		DrawCollisionShape(World, MakeCollisionShapeFromShapeRef(ShapeRef), Transform, Color, bPersistentLines, LifeTime, DepthPriority,
+		                   Thickness);
 	}
 
-	return ShapeRef;
-}
-
-void M::Physics::DrawCollisionShape(const UWorld* World, const FCollisionShape& CollisionShape, const FTransform& Transform,
-                                    const FColor& Color, const bool bPersistentLines, const float LifeTime, const uint8 DepthPriority,
-                                    const float Thickness)
-{
-	constexpr int32 SphereSegments = 8;
-
-	if (!IsValid(World))
+	// TODO: think about adding more optional data to draw here (surface normal?)
+	void DrawTraceHitResult(const UWorld* World, const FHitResult& HitResult, const FCollisionShape& CollisionShape,
+	                        const FQuat& CollisionShapeRotation, const FColor& Color, bool bPersistentLines, const float LifeTime,
+	                        const uint8 DepthPriority, const float Thickness)
 	{
-		return;
-	}
-
-	switch (CollisionShape.ShapeType)
-	{
-	case ECollisionShape::Box:
-		DrawDebugBox(World, Transform.GetLocation(), CollisionShape.GetBox() * 2.f, Transform.GetRotation(), Color, bPersistentLines,
-		             LifeTime,
-		             DepthPriority, Thickness);
-		break;
-	case ECollisionShape::Sphere:
-		DrawDebugSphere(World, Transform.GetLocation(), CollisionShape.GetSphereRadius(), SphereSegments, Color, bPersistentLines, LifeTime,
-		                DepthPriority, Thickness);
-		break;
-	case ECollisionShape::Capsule:
-		DrawDebugCapsule(World, Transform.GetLocation(), CollisionShape.GetCapsuleHalfHeight(), CollisionShape.GetCapsuleRadius(),
-		                 Transform.GetRotation(), Color,
-		                 bPersistentLines, LifeTime, DepthPriority, Thickness);
-		break;
-	case ECollisionShape::Line:
-		DrawDebugPoint(World, Transform.GetLocation(), 10.0f, Color, bPersistentLines, LifeTime, DepthPriority);
-		break;
-	default:
-		UE_LOG(LogTemp, Error, TEXT("Shape Type not handled by M::Physics::DrawCollisionShape"));
-	}
-}
-
-// TODO: think about adding more optional data to draw here (surface normal?)
-void M::Physics::DrawTraceHitResult(const UWorld* World, const FHitResult& HitResult, const FCollisionShape& CollisionShape,
-                                    const FQuat& CollisionShapeRotation, const FColor& Color, bool bPersistentLines, const float LifeTime,
-                                    const uint8 DepthPriority, const float Thickness)
-{
-	if (!IsValid(World))
-	{
-		return;
-	}
-
-	// Draw trace line (start -> impact point or end if no hit)
-	const FVector& Start = HitResult.TraceStart;
-	const FVector& End = HitResult.bBlockingHit ? HitResult.Location : HitResult.TraceEnd;
-
-	DrawDebugLine(World, Start, End, Color, false, LifeTime, 0, Thickness);
-
-	DrawCollisionShape(World, CollisionShape, FTransform(CollisionShapeRotation, End),
-	                   Color, bPersistentLines, LifeTime, DepthPriority, Thickness);
-
-	// If there was a blocking hit, draw impact point
-	if (HitResult.bBlockingHit)
-	{
-		// Impact point
-		DrawDebugSphere(World, HitResult.ImpactPoint, 8.0f, 12, Color, false, LifeTime);
-
-		// Small text with hit actor name (optional)
-		if (const AActor* HitActor = HitResult.GetActor())
+		if (!IsValid(World))
 		{
-			DrawDebugString(
-				World,
-				HitResult.ImpactPoint + FVector(0, 0, 20),
-				HitActor->GetName(),
-				nullptr,
-				FColor::White,
-				LifeTime
-			);
+			return;
+		}
+
+		// Draw trace line (start -> impact point or end if no hit)
+		const FVector& Start = HitResult.TraceStart;
+		const FVector& End = HitResult.bBlockingHit ? HitResult.Location : HitResult.TraceEnd;
+
+		DrawDebugLine(World, Start, End, Color, false, LifeTime, 0, Thickness);
+
+		DrawCollisionShape(World, CollisionShape, FTransform(CollisionShapeRotation, End),
+		                   Color, bPersistentLines, LifeTime, DepthPriority, Thickness);
+
+		// If there was a blocking hit, draw impact point
+		if (HitResult.bBlockingHit)
+		{
+			// Impact point
+			DrawDebugSphere(World, HitResult.ImpactPoint, 8.0f, 12, Color, false, LifeTime);
+
+			// Small text with hit actor name (optional)
+			if (const AActor* HitActor = HitResult.GetActor())
+			{
+				DrawDebugString(
+					World,
+					HitResult.ImpactPoint + FVector(0, 0, 20),
+					HitActor->GetName(),
+					nullptr,
+					FColor::White,
+					LifeTime
+				);
+			}
+		}
+		else
+		{
+			// No hit → mark trace end
+			DrawDebugSphere(World, HitResult.TraceEnd, 6.0f, 8, FColor::Yellow, bPersistentLines, LifeTime, DepthPriority, Thickness);
+			DrawDebugString(World, HitResult.TraceEnd + FVector(0, 0, 20), TEXT("NO HIT"), nullptr, FColor::Yellow, LifeTime);
 		}
 	}
-	else
+
+	constexpr int32 DebugSphereSegments = 8;
+
+	void DrawCollisionShapePDI(FPrimitiveDrawInterface* PDI, const FMCollisionShapeRef& CollisionShape, const FTransform& Transform,
+	                           const FColor& Color, float Thickness)
 	{
-		// No hit → mark trace end
-		DrawDebugSphere(World, HitResult.TraceEnd, 6.0f, 8, FColor::Yellow, bPersistentLines, LifeTime, DepthPriority, Thickness);
-		DrawDebugString(World, HitResult.TraceEnd + FVector(0, 0, 20), TEXT("NO HIT"), nullptr, FColor::Yellow, LifeTime);
+		DrawCollisionShapePDI(PDI, MakeCollisionShapeFromShapeRef(CollisionShape), Transform, Color, Thickness);
+	}
+
+	void DrawCollisionShapePDI(FPrimitiveDrawInterface* PDI, const FCollisionShape& CollisionShape, const FTransform& Transform,
+	                           const FColor& Color, const float Thickness)
+	{
+		const FMatrix LocalToWorld = Transform.ToMatrixWithScale();
+
+		switch (CollisionShape.ShapeType)
+		{
+		case ECollisionShape::Box:
+			{
+				const FBox Box(-CollisionShape.GetExtent(), CollisionShape.GetExtent());
+				DrawWireBox(PDI, LocalToWorld, Box, Color, SDPG_World, Thickness);
+				break;
+			}
+		case ECollisionShape::Sphere:
+			{
+				DrawWireSphere(PDI, Transform, Color, CollisionShape.GetSphereRadius(), DebugSphereSegments, SDPG_World, Thickness);
+				break;
+			}
+		case ECollisionShape::Capsule:
+			{
+				const int32 CapsuleSides = FMath::Clamp<int32>(CollisionShape.GetCapsuleRadius() / 4.f, 16, 64);
+				DrawWireCapsule(PDI, LocalToWorld.GetOrigin(),
+				                LocalToWorld.GetUnitAxis(EAxis::X), LocalToWorld.GetUnitAxis(EAxis::Y), LocalToWorld.GetUnitAxis(EAxis::Z),
+				                Color, CollisionShape.GetCapsuleRadius(), CollisionShape.GetCapsuleHalfHeight(), CapsuleSides,
+				                SDPG_World, Thickness);
+				break;
+			}
+		case ECollisionShape::Line:
+			{
+				// TODO: draw it?
+				break;
+			}
+		default:
+			UE_LOG(LogTemp, Error, TEXT("Shape Type not handled by M::Physics::DrawCollisionShape"));
+		}
+	}
+
+	FBoxSphereBounds GetSphereBoundsFromCollisionShape(const FCollisionShape& CollisionShape, const FTransform& Transform)
+	{
+		FVector Extent;
+
+		if (CollisionShape.IsBox())
+		{
+			Extent = CollisionShape.GetBox();
+		}
+		else if (CollisionShape.IsSphere())
+		{
+			float R = CollisionShape.GetSphereRadius();
+			Extent = FVector(R);
+		}
+		else if (CollisionShape.IsCapsule())
+		{
+			float R = CollisionShape.GetCapsuleRadius();
+			float H = CollisionShape.GetCapsuleHalfHeight();
+			Extent = FVector(R, R, H);
+		}
+
+		FBox LocalBox(-Extent, Extent);
+		return FBoxSphereBounds(LocalBox.TransformBy(Transform));
 	}
 }
 
@@ -165,7 +246,7 @@ bool UMPhysicsBlueprintLibrary::LineTraceActor(const UObject* WorldContextObject
 	{
 		return false;
 	}
-	
+
 	const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::ReturnNull);
 	if (!IsValid(World))
 	{

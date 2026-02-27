@@ -19,16 +19,16 @@ enum class EMCompareOp : uint8
 	Greater
 };
 
-UCLASS()
+UCLASS(DisplayName = "Compare Floats")
 class MUTILITY_API UMGameplayCondition_CompareFloats : public UMGameplayCondition_Base
 {
 	GENERATED_BODY()
 	
 public:
 	// UMGameplayCondition_Base
-	virtual bool Evaluate_Impl_Implementation(const UWorld* World) override;
-	virtual void ListenForChanges_Implementation(const UWorld* World) override;
-	virtual void StopListeningForChanges_Implementation(const UWorld* World) override;
+	virtual bool Evaluate_Impl_Implementation(const UObject* ContextObject) override;
+	virtual void ListenForChanges_Impl_Implementation(const UObject* ContextObject) override;
+	virtual void StopListeningForChanges_Impl_Implementation(const UObject* ContextObject) override;
 	virtual FString GetConditionDescriptionString_Implementation() const override;
 	// ~ UMGameplayCondition_Base
 

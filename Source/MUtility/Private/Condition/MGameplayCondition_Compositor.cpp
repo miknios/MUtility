@@ -3,7 +3,7 @@
 
 #include "Condition/MGameplayCondition_Compositor.h"
 
-bool UMGameplayCondition_Compositor::Evaluate_Impl_Implementation(const UWorld* World)
+bool UMGameplayCondition_Compositor::Evaluate_Impl_Implementation(const UObject* ContextObject)
 {
 	bool bOrResult = false;
 	for (UMGameplayCondition_Base* Condition : Conditions)
@@ -13,7 +13,7 @@ bool UMGameplayCondition_Compositor::Evaluate_Impl_Implementation(const UWorld* 
 			continue;
 		}
 
-		const bool bEvaluationResult = Condition->Evaluate(World);
+		const bool bEvaluationResult = Condition->Evaluate(ContextObject);
 		bOrResult |= bEvaluationResult;
 
 		if (CompositionType == EMConditionCompositionType::AND && !bEvaluationResult)
@@ -28,7 +28,7 @@ bool UMGameplayCondition_Compositor::Evaluate_Impl_Implementation(const UWorld* 
 	return bResult;
 }
 
-void UMGameplayCondition_Compositor::ListenForChanges_Implementation(const UWorld* World)
+void UMGameplayCondition_Compositor::ListenForChanges_Impl_Implementation(const UObject* ContextObject)
 {
 	for (UMGameplayCondition_Base* Condition : Conditions)
 	{
@@ -38,11 +38,11 @@ void UMGameplayCondition_Compositor::ListenForChanges_Implementation(const UWorl
 		}
 
 		Condition->OnConditionSourceChangedDelegate.AddDynamic(this, &UMGameplayCondition_Compositor::OnInternalConditionChanged);
-		Condition->ListenForChanges(World);
+		Condition->ListenForChanges(ContextObject);
 	}
 }
 
-void UMGameplayCondition_Compositor::StopListeningForChanges_Implementation(const UWorld* World)
+void UMGameplayCondition_Compositor::StopListeningForChanges_Impl_Implementation(const UObject* ContextObject)
 {
 	for (UMGameplayCondition_Base* Condition : Conditions)
 	{
@@ -52,7 +52,7 @@ void UMGameplayCondition_Compositor::StopListeningForChanges_Implementation(cons
 		}
 
 		Condition->OnConditionSourceChangedDelegate.RemoveDynamic(this, &UMGameplayCondition_Compositor::OnInternalConditionChanged);
-		Condition->StopListeningForChanges(World);
+		Condition->StopListeningForChanges(ContextObject);
 	}
 }
 

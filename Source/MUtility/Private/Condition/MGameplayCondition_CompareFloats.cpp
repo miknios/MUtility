@@ -5,45 +5,45 @@
 
 #include "MFloatSource.h"
 
-bool UMGameplayCondition_CompareFloats::Evaluate_Impl_Implementation(const UWorld* World)
+bool UMGameplayCondition_CompareFloats::Evaluate_Impl_Implementation(const UObject* ContextObject)
 {
 	if (!ensureAlways(ValueSourceLeft != nullptr && ValueSourceRight != nullptr))
 	{
 		return false;
 	}
 
-	const float ValueLeftEvaluated = ValueSourceLeft->GetFloatValue();
-	const float ValueRightEvaluated = ValueSourceRight->GetFloatValue();
+	const float ValueLeftEvaluated = ValueSourceLeft->GetFloatValue(ContextObject);
+	const float ValueRightEvaluated = ValueSourceRight->GetFloatValue(ContextObject);
 	const bool bResult = CompareFloats(ValueLeftEvaluated, ValueRightEvaluated);
 
 	return bResult;
 }
 
-void UMGameplayCondition_CompareFloats::ListenForChanges_Implementation(const UWorld* World)
+void UMGameplayCondition_CompareFloats::ListenForChanges_Impl_Implementation(const UObject* ContextObject)
 {
 	if (!ensureAlways(ValueSourceLeft != nullptr && ValueSourceRight != nullptr))
 	{
 		return;
 	}
 
-	ValueSourceLeft->ListenForChanges();
+	ValueSourceLeft->ListenForChanges(ContextObject);
 	ValueSourceLeft->OnValueChangedDelegate.AddUniqueDynamic(this, &UMGameplayCondition_CompareFloats::OnFloatValueChanged);
 
-	ValueSourceRight->ListenForChanges();
+	ValueSourceRight->ListenForChanges(ContextObject);
 	ValueSourceRight->OnValueChangedDelegate.AddUniqueDynamic(this, &UMGameplayCondition_CompareFloats::OnFloatValueChanged);
 }
 
-void UMGameplayCondition_CompareFloats::StopListeningForChanges_Implementation(const UWorld* World)
+void UMGameplayCondition_CompareFloats::StopListeningForChanges_Impl_Implementation(const UObject* ContextObject)
 {
 	if (!ensureAlways(ValueSourceLeft != nullptr && ValueSourceRight != nullptr))
 	{
 		return;
 	}
 
-	ValueSourceLeft->StopListeningForChanges();
+	ValueSourceLeft->StopListeningForChanges(ContextObject);
 	ValueSourceLeft->OnValueChangedDelegate.RemoveDynamic(this, &UMGameplayCondition_CompareFloats::OnFloatValueChanged);
 
-	ValueSourceRight->StopListeningForChanges();
+	ValueSourceRight->StopListeningForChanges(ContextObject);
 	ValueSourceRight->OnValueChangedDelegate.RemoveDynamic(this, &UMGameplayCondition_CompareFloats::OnFloatValueChanged);
 }
 

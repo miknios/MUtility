@@ -23,9 +23,9 @@ class MUTILITY_API UMGameplayCondition_Compositor : public UMGameplayCondition_B
 
 public:
 	// ~ UWestCondition_Base
-	virtual bool Evaluate_Impl_Implementation(const UWorld* World) override;
-	virtual void ListenForChanges_Implementation(const UWorld* World) override;
-	virtual void StopListeningForChanges_Implementation(const UWorld* World) override;
+	virtual bool Evaluate_Impl_Implementation(const UObject* ContextObject) override;
+	virtual void ListenForChanges_Impl_Implementation(const UObject* ContextObject) override;
+	virtual void StopListeningForChanges_Impl_Implementation(const UObject* ContextObject) override;
 	virtual FString GetConditionDescriptionString_Implementation() const override;
 	// ~ UWestCondition_Base
 

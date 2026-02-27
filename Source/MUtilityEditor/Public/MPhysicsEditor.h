@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Miknios. All rights reserved.
 
+#pragma once
 
-#include "Team/MTeamSettings.h"
+#include "CoreMinimal.h"

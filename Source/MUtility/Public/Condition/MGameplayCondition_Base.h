@@ -18,13 +18,13 @@ class MUTILITY_API UMGameplayCondition_Base : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable)
-	bool Evaluate(const UWorld* World);
+	bool Evaluate(const UObject* ContextObjectOverride = nullptr);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void ListenForChanges(const UWorld* World);
+	UFUNCTION(BlueprintCallable)
+	void ListenForChanges(const UObject* ContextObjectOverride = nullptr);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void StopListeningForChanges(const UWorld* World);
+	UFUNCTION(BlueprintCallable)
+	void StopListeningForChanges(const UObject* ContextObjectOverride = nullptr);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	FString GetConditionDescriptionString() const;
@@ -34,11 +34,20 @@ public:
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
-	bool Evaluate_Impl(const UWorld* World);
+	bool Evaluate_Impl(const UObject* ContextObject);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void ListenForChanges_Impl(const UObject* ContextObject);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void StopListeningForChanges_Impl(const UObject* ContextObject);
 	
 	UFUNCTION(BlueprintCallable)
 	void BroadcastOnConditionSourceChanged();
 
 	UPROPERTY(EditAnywhere, Category = "Condition")
 	bool bInvertCondition = false;
+	
+	virtual const UObject* GetDefaultContextObject() const;
+	const UObject* GetDefaultContextOrOverride(const UObject* ContextObjectOverride) const;
 };

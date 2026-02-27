@@ -18,6 +18,11 @@
 			"Name": "MUtility",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "MUtilityEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }
